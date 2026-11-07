@@ -430,6 +430,93 @@ a{color:inherit}
   .place{font-size:16px}
 }
 
+
+
+/* ---------- quick intro + natural profile scroll + layered lower panels ---------- */
+.js .sak-intro{
+  transition:opacity .4s ease,visibility .4s ease;
+}
+.js .sak-intro.is-leaving{opacity:0;visibility:hidden}
+.sak-receiving-hand{animation-duration:.8s;animation-delay:.08s}
+.sak-giving-hand{animation-duration:.7s;animation-delay:1.9s}
+.sak-ring-sparkles{animation-duration:.55s;animation-delay:2.15s}
+
+/* The hero and couple profiles flow naturally, so no names or family details
+   are trapped in a viewport-height sticky panel. */
+.sheet{overflow:clip}
+.sheet>.hero,
+.sheet>.couple{
+  position:relative;
+  top:auto;
+  min-height:0;
+}
+.sheet>.hero{z-index:1;background:linear-gradient(180deg,var(--wine-800),var(--wine-700))}
+.sheet>.couple{z-index:2;background:linear-gradient(180deg,var(--wine-700),var(--wine-800))}
+
+/* Keep the event panel and closing blessing in normal document flow.
+   This prevents the decorative bands/panels from sliding over one another. */
+.sheet>.paper{
+  position:relative;
+  top:auto;
+  z-index:auto;
+  min-height:0;
+  box-shadow:none;
+}
+.sheet>.foot{
+  position:relative;
+  top:auto;
+  z-index:auto;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:linear-gradient(180deg,var(--wine-800),var(--wine-950));
+}
+
+/* Keep the closing invitation sections static when scrolling to the bottom. */
+.hosts.reveal,
+.sheet>.foot.reveal{
+  opacity:1!important;
+  transform:none!important;
+  transition:none!important;
+}
+
+/* Explicit scroll affordances: viewers can see that more invitation content follows. */
+.scroll-cue{
+  grid-column:1/-1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  width:max-content;
+  max-width:100%;
+  margin:14px auto 0;
+  padding:5px 16px 2px;
+  color:var(--gold-200);
+  font-size:clamp(12px,3.1vw,15px);
+  line-height:1.45;
+  letter-spacing:.2px;
+  text-align:center;
+  text-shadow:0 2px 10px rgba(0,0,0,.35);
+  animation:scroll-cue-pulse 1.8s ease-in-out infinite;
+}
+.scroll-arrow{font-family:Arial,sans-serif;font-size:28px;line-height:.85;color:var(--gold-300)}
+.couple-cue{margin-top:18px;padding-bottom:0}
+@keyframes scroll-cue-pulse{
+  0%,100%{opacity:.72;transform:translateY(0)}
+  50%{opacity:1;transform:translateY(4px)}
+}
+@media(max-width:540px){
+  .sheet>.paper,.sheet>.foot{min-height:100svh}
+  .scroll-cue{margin-top:10px}
+  .couple-cue{margin-top:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  .js .sak-intro{transition:none}
+  .scroll-cue{animation:none}
+}
+
 </style>
 </head>
 <body>
@@ -545,6 +632,9 @@ a{color:inherit}
     <p class="lead">श्री गणेशाच्या आणि कुलदैवताच्या आशीर्वादाने आमच्या परिवारातील मंगल प्रसंगी आपणांस सहकुटुंब, सहपरिवार</p>
     <h1 class="invite-title gold-text">आग्रहाचे निमंत्रण</h1>
     <div class="orn" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="scroll-cue" aria-label="वधू-वरांची माहिती खाली आहे">
+      <span>वधू-वरांची माहिती पुढे आहे</span><span class="scroll-arrow" aria-hidden="true">⌄</span>
+    </div>
   </header>
 
   <section class="couple" aria-label="वधू-वर">
@@ -570,6 +660,9 @@ a{color:inherit}
       <svg class="rings" aria-hidden="true" focusable="false"><use href="#s-rings"/></svg>
       <p class="of">यांचा</p>
       <h2 class="gold-text">साखरपुडा <br>समारंभ</h2>
+    </div>
+    <div class="scroll-cue couple-cue" aria-label="कार्यक्रमाची माहिती खाली आहे">
+      <span>कार्यक्रमाची माहिती खाली आहे</span><span class="scroll-arrow" aria-hidden="true">⌄</span>
     </div>
   </section>
 
@@ -676,7 +769,7 @@ a{color:inherit}
     document.body.style.overflow='';
     window.setTimeout(function(){
       if(intro&&intro.parentNode)intro.parentNode.removeChild(intro);
-    },1250);
+    },500);
   }
 
   function unlockAmbientAudio(){
@@ -790,7 +883,7 @@ a{color:inherit}
   },{capture:true});
 
   /* Opening display duration is independent of mantra duration. */
-  window.setTimeout(function(){if(intro&&!closed)closeIntro();},8500);
+  window.setTimeout(function(){if(intro&&!closed)closeIntro();},3200);
 })();
 </script>
 
